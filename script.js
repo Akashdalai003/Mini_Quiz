@@ -14,11 +14,13 @@ document.addEventListener('DOMContentLoaded',()=>{
       question: "What is the capital of France?",
       choices: ["Paris", "London", "Berlin", "Madrid"],
       answer: "Paris",
+      marks:5
     },
     {
       question: "Which planet is known as the Red Planet?",
       choices: ["Mars", "Venus", "Jupiter", "Saturn"],
       answer: "Mars",
+      marks:10
     },
     {
       question: "Who wrote 'Hamlet'?",
@@ -29,19 +31,25 @@ document.addEventListener('DOMContentLoaded',()=>{
         "Mark Twain",
       ],
       answer: "William Shakespeare",
+      marks:15
     },
   ];
 
     let currentQuestionIndex=0
     let Score=0
+    let selectedAnswer=null
 
     startBtn.addEventListener('click',startQuiz)
+
     nextBtn.addEventListener('click',()=>{
+        if(selectedAnswer===questions[currentQuestionIndex].answer){
+            Score+=questions[currentQuestionIndex].marks
+        }
         currentQuestionIndex++
         if(currentQuestionIndex<questions.length){
             showQuestion()
         }else{
-            showResult()
+            totalMarks()
         }
     })
 
@@ -64,27 +72,33 @@ document.addEventListener('DOMContentLoaded',()=>{
 
     function showQuestion(){
         nextBtn.classList.add('hidden')
+        selectedAnswer=null
         questionText.textContent=questions[currentQuestionIndex].question
         choicesList.innerHTML="" //clear previous choices
         questions[currentQuestionIndex].choices.forEach(choice=>{
             const li =document.createElement('li')
             li.textContent=choice
-            li.addEventListener('click',()=>selectAnswer(choice))
+            li.addEventListener('click',()=>selectAnswer(choice,li))
             choicesList.appendChild(li)
         })
     }
 
-    function selectAnswer(choice){
-          if(questions[currentQuestionIndex].answer===choice){
-            Score++
-          }
+    function selectAnswer(choice,selectedChoice){
+          selectedAnswer=choice
+          choicesList.querySelectorAll('li').forEach(option=>option.classList.remove('selected'))
+          selectedChoice.classList.add('selected')
           nextBtn.classList.remove('hidden')
+    }
+
+    const marksSum=questions.reduce((sum,question)=>sum+question.marks,0)
+    function totalMarks(){
+        showResult()
     }
 
     function showResult(){
         questionContainer.classList.add('hidden')
         resultContainer.classList.remove('hidden')
-        ScoreDisplay.textContent=`${Score} out of ${questions.length}`
+        ScoreDisplay.textContent=`${Score} out of ${marksSum}`
 
     }
 

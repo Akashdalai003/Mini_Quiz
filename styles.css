@@ -47,6 +47,15 @@ li:hover {
   background-color: #6200ea;
 }
 
+li.selected {
+  background-color: #6200ea;
+  outline: 2px solid #bb86fc;
+}
+
+li.selected:hover {
+  background-color: #6200ea;
+}
+
 button {
   padding: 10px;
   background-color: #6200ea;
